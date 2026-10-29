@@ -17,20 +17,27 @@ app.use(express.json());
 app.use(cors());
 
 let isConnected = false;
+let mongoError = null;
+
 async function connectDB() {
   if (isConnected || mongoose.connection.readyState === 1) {
     isConnected = true;
     return;
   }
   const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
-  if (!uri) return;
+  if (!uri) {
+    mongoError = "MONGO_URI manquant";
+    return;
+  }
   try {
     await mongoose.connect(uri, {
       serverSelectionTimeoutMS: 5000
     });
     isConnected = true;
+    mongoError = null;
     console.log("MongoDB est connecté");
   } catch (error) {
+    mongoError = error.message;
     console.error("Erreur MongoDB :", error.message);
   }
 }
@@ -54,7 +61,8 @@ app.get("/api/test", (req, res) => {
   res.json({
     message: "L'API fonctionne correctement",
     database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
-    hasMongoUri: Boolean(process.env.MONGO_URI || process.env.MONGODB_URI)
+    hasMongoUri: Boolean(process.env.MONGO_URI || process.env.MONGODB_URI),
+    mongoError: mongoError
   });
 });
 

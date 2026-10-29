@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:5000/api/etudiants" : "/api/etudiants");
+const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:5000/api/etudiants" : "https://gestion-etudiants-pi.vercel.app/api/etudiants");
 
 function App() {
   const [etudiants, setEtudiants] = useState([]);
