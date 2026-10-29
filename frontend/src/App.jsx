@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || (window.location.hostname === "localhost" ? "http://localhost:5000/api/etudiants" : "/api/etudiants");
+
 function App() {
   const [etudiants, setEtudiants] = useState([]);
   const [erreur, setErreur] = useState("");
@@ -10,7 +12,7 @@ function App() {
   const [age, setAge] = useState("");
 
   const chargerEtudiants = () => {
-    fetch("http://localhost:5000/api/etudiants")
+    fetch(API_URL)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Impossible de charger les étudiants");
@@ -34,7 +36,7 @@ function App() {
     setSucces("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/etudiants", {
+      const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nom, email, age: Number(age) })
@@ -59,7 +61,7 @@ function App() {
     if (!window.confirm("Êtes-vous sûr de vouloir supprimer cet étudiant ?")) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/etudiants/${id}`, {
+      const response = await fetch(`${API_URL}/${id}`, {
         method: "DELETE"
       });
 
