@@ -5,7 +5,7 @@ exports.getEtudiants = async (req, res) => {
     const etudiants = await Etudiant.find();
     res.json(etudiants);
   } catch (error) {
-    res.status(500).json({ message: "Erreur serveur" });
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 };
 
@@ -20,7 +20,8 @@ exports.createEtudiant = async (req, res) => {
     res.status(201).json(resultat);
   } catch (error) {
     res.status(400).json({
-      message: "Impossible de créer l'étudiant"
+      message: "Impossible de créer l'étudiant",
+      error: error.message
     });
   }
 };
@@ -44,7 +45,8 @@ exports.updateEtudiant = async (req, res) => {
     res.json(etudiant);
   } catch (error) {
     res.status(400).json({
-      message: "Modification impossible"
+      message: "Modification impossible",
+      error: error.message
     });
   }
 };
@@ -60,7 +62,8 @@ exports.deleteEtudiant = async (req, res) => {
     res.json({ message: "Étudiant supprimé" });
   } catch (error) {
     res.status(400).json({
-      message: "Suppression impossible"
+      message: "Suppression impossible",
+      error: error.message
     });
   }
 };

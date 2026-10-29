@@ -22,9 +22,12 @@ async function connectDB() {
     isConnected = true;
     return;
   }
-  if (!process.env.MONGO_URI) return;
+  const uri = process.env.MONGO_URI || process.env.MONGODB_URI;
+  if (!uri) return;
   try {
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000
+    });
     isConnected = true;
     console.log("MongoDB est connecté");
   } catch (error) {
@@ -49,7 +52,9 @@ app.get("/", (req, res) => {
 
 app.get("/api/test", (req, res) => {
   res.json({
-    message: "L'API fonctionne correctement"
+    message: "L'API fonctionne correctement",
+    database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
+    hasMongoUri: Boolean(process.env.MONGO_URI || process.env.MONGODB_URI)
   });
 });
 
